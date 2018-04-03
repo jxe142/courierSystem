@@ -15,7 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls import include, url
+from django.conf.urls.static import static
+from django.contrib.auth.views import login #logout
+from DrugSystem.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    url(r'^login$', login, {'template_name':'login.html'}, name='login'),
+    url(r'^logout$', logOut, name='logout'),
+    url(r'^', home, name='home'),
+
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
