@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, logout
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User, Group, Permission
@@ -72,7 +72,7 @@ def register(request):
                 cI.user_set.add(newUser)
                 print('Added to Level CI')
 
-                login(user=newUser, request=request)
+                #django.contrib.auth.login(user=newUser, request=request)
                 return redirect("/home", request=request)
             else:
                 return HttpResponse(400, 'Please include all of the informaiton')
@@ -93,6 +93,97 @@ def checkUserName(request):
             data['available'] = True
             return HttpResponse(json.dumps(data), content_type='application/json')
 
+@csrf_exempt
+@login_required
+def updateDEALevel(request):
+    context_dict = {}
+
+
+    # if(not request.user.is_superuser):
+    #     print('Not Super')
+    #     return redirect("/home", request)
+    # else:
+    if(request.method == "POST"): #go in and add the users to the groups we specified
+        userType = ContentType.objects.get_for_model(User)
+        cI, created = Group.objects.get_or_create(name='DEA_CI')
+        buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
+        cI.permissions.add(buyCI)
+
+        cII, created = Group.objects.get_or_create(name='DEA_CII')
+        buyCII, created = Permission.objects.get_or_create(name='Buy CII',codename='CIIBuyer', content_type=userType)
+        cII.permissions.add(buyCI)
+        cII.permissions.add(buyCII)
+
+        cIII, created = Group.objects.get_or_create(name='DEA_CIII')
+        buyCIII, created = Permission.objects.get_or_create(name='Buy CIII',codename='CIIIBuyer', content_type=userType)
+        cIII.permissions.add(buyCI)
+        cIII.permissions.add(buyCII)
+        cIII.permissions.add(buyCIII)
+
+        cIV, created = Group.objects.get_or_create(name='DEA_CIV')
+        buyCIV, created = Permission.objects.get_or_create(name='Buy CIV',codename='CIVBuyer', content_type=userType)
+        cIV.permissions.add(buyCI)
+        cIV.permissions.add(buyCII)
+        cIV.permissions.add(buyCIII)
+        cIV.permissions.add(buyCIV)
+
+
+        cV, created = Group.objects.get_or_create(name='DEA_CV')
+        buyCV, created = Permission.objects.get_or_create(name='Buy CV',codename='CVBuyer', content_type=userType)
+        cV.permissions.add(buyCI)
+        cV.permissions.add(buyCII)
+        cV.permissions.add(buyCIII)
+        cV.permissions.add(buyCIV)
+        cV.permissions.add(buyCV)
+        
+        user = request.POST.get('user')
+        newLevel = request.POST.get('selectedLvl')
+        user = User.objects.get(username=user)
+
+        if(newLevel == 'CI'):
+            user.groups.clear()
+            cI.user_set.add(user)
+        elif(newLevel == 'CII'):
+            user.groups.clear()
+            cII.user_set.add(user)
+        elif(newLevel == 'CIII'):
+            user.groups.clear()
+            cIII.user_set.add(user)
+        elif(newLevel == "CIV"):
+            user.groups.clear()
+            cIV.user_set.add(user)
+        elif(newLevel == 'CV'):
+            user.groups.clear()
+            cV.user_set.add(user)
+
+        print(user)
+        print(newLevel)
+
+    print("Not POST")
+    usersAndLevels = []
+    users = Client.objects.filter().all()
+    for u in users:
+        for g in u.user.groups.all():
+            if(g.name == 'DEA_CV'):
+                usersAndLevels.append((u, g.name))
+                break
+            if(g.name == 'DEA_CIV'):
+                usersAndLevels.append((u, g.name))
+                break
+            if(g.name == 'DEA_CIII'):
+                usersAndLevels.append((u, g.name))
+                break
+            if(g.name == 'DEA_CII'):
+                usersAndLevels.append((u, g.name))
+                break
+            if(g.name == 'DEA_CI'):
+                usersAndLevels.append((u, g.name))
+                break
+
+    context_dict['users'] = usersAndLevels
+    return render(request, 'DEApermissions.html', context=context_dict )
+
+        
 
 def home(request):
     # freeUser, created = Group.objects.get_or_create(name='Free Users')

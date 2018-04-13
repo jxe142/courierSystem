@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+
+    <body>
+
+  <h2>Test</h2>
+
+  {% for user, DEALevel in users %}
+  <form method="POST" action="/updateDEA">
+        {{user.user}}
+        {{DEALevel}}
+        <select name="selectedLvl" >
+            {%if DEALevel == "DEA_CI"%}
+                <option value="CI" selected="selected">CI</option>
+                <option value="CII">CII</option>
+                <option value="CIII">CIII</option>
+                <option value="CIV">CIV</option>
+                <option value="CV">CV</option>
+            {%elif DEALevel == "DEA_CII"%}
+                <option value="CI">CI</option>
+                <option value="CII" selected="selected">CII</option>
+                <option value="CIII">CIII</option>
+                <option value="CIV">CIV</option>
+                <option value="CV">CV</option>
+            {%elif DEALevel == "DEA_CIII"%}
+                <option value="CI">CI</option>
+                <option value="CII">CII</option>
+                <option value="CIII" selected="selected">CIII</option>
+                <option value="CIV">CIV</option>
+                <option value="CV">CV</option>
+            {%elif DEALevel == "DEA_CIV"%}
+                <option value="CI">CI</option>
+                <option value="CII">CII</option>
+                <option value="CIII">CIII</option>
+                <option value="CIV" selected="selected">CIV</option>
+                <option value="CV">CV</option>
+            {%elif DEALevel == "DEA_CV"%}
+                <option value="CI">CI</option>
+                <option value="CII">CII</option>
+                <option value="CIII">CIII</option>
+                <option value="CIV">CIV</option>
+                <option value="CV" selected="selected">CV</option>
+            {%endif%}
+          </select>
+
+          <input type="hidden" name="user" value={{user.user}}>
+    <input type="submit" value="Submit">
+  </form>
+  {% endfor %}
+ 
+
+
+    </body>
+
+</html>

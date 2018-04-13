@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^logout$', logOut, name='logout'),
     url(r'^makeDrugs$', makeDrugs), 
     url(r'^register', register),
+    url(r'^updateDEA$', updateDEALevel),
     url(r'^', home, name='home'),
 
 
