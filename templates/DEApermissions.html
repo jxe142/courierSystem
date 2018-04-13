@@ -13,31 +13,43 @@
         {{user.user}}
         {{DEALevel}}
         <select name="selectedLvl" >
-            {%if DEALevel == "DEA_CI"%}
+            {%if DEALevel == "DEA_C0"%}
+                <option value="C0" selected="selected">No permissions</option>
+                <option value="CI">CI</option>
+                <option value="CII">CII</option>
+                <option value="CIII">CIII</option>
+                <option value="CIV">CIV</option>
+                <option value="CV">CV</option>
+            {%elif DEALevel == "DEA_CI"%}
+                <option value="C0">No permissions</option>
                 <option value="CI" selected="selected">CI</option>
                 <option value="CII">CII</option>
                 <option value="CIII">CIII</option>
                 <option value="CIV">CIV</option>
                 <option value="CV">CV</option>
             {%elif DEALevel == "DEA_CII"%}
+                <option value="C0">No permissions</option>
                 <option value="CI">CI</option>
                 <option value="CII" selected="selected">CII</option>
                 <option value="CIII">CIII</option>
                 <option value="CIV">CIV</option>
                 <option value="CV">CV</option>
             {%elif DEALevel == "DEA_CIII"%}
+                <option value="C0">No permissions</option>
                 <option value="CI">CI</option>
                 <option value="CII">CII</option>
                 <option value="CIII" selected="selected">CIII</option>
                 <option value="CIV">CIV</option>
                 <option value="CV">CV</option>
             {%elif DEALevel == "DEA_CIV"%}
+                <option value="C0">No permissions</option>    
                 <option value="CI">CI</option>
                 <option value="CII">CII</option>
                 <option value="CIII">CIII</option>
                 <option value="CIV" selected="selected">CIV</option>
                 <option value="CV">CV</option>
             {%elif DEALevel == "DEA_CV"%}
+                <option value="C0">No permissions</option>
                 <option value="CI">CI</option>
                 <option value="CII">CII</option>
                 <option value="CIII">CIII</option>

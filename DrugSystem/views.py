@@ -30,9 +30,9 @@ def register(request):
 
     #Get the free user group and add permissions
     userType = ContentType.objects.get_for_model(User)
-    cI, created = Group.objects.get_or_create(name='DEA_CI')
-    buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
-    cI.permissions.add(buyCI)
+    c0, created = Group.objects.get_or_create(name='DEA_C0')
+    buyC0, created = Permission.objects.get_or_create(name='Buy C0',codename='C0Buyer', content_type=userType)
+    c0.permissions.add(buyC0)
 
 
     if(request.POST):
@@ -69,8 +69,8 @@ def register(request):
                 print('Made the user')
 
                 #Add them to the free group
-                cI.user_set.add(newUser)
-                print('Added to Level CI')
+                c0.user_set.add(newUser)
+                print('Added to Level C0')
 
                 #django.contrib.auth.login(user=newUser, request=request)
                 return redirect("/home", request=request)
@@ -105,6 +105,11 @@ def updateDEALevel(request):
     # else:
     if(request.method == "POST"): #go in and add the users to the groups we specified
         userType = ContentType.objects.get_for_model(User)
+        c0, created = Group.objects.get_or_create(name='DEA_C0')
+        buyC0, created = Permission.objects.get_or_create(name='Buy C0',codename='C0Buyer', content_type=userType)
+        c0.permissions.add(buyC0)
+
+
         cI, created = Group.objects.get_or_create(name='DEA_CI')
         buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
         cI.permissions.add(buyCI)
@@ -140,7 +145,11 @@ def updateDEALevel(request):
         newLevel = request.POST.get('selectedLvl')
         user = User.objects.get(username=user)
 
-        if(newLevel == 'CI'):
+
+        if(newLevel == 'C0'):
+            user.groups.clear()
+            c0.user_set.add(user)
+        elif(newLevel == 'CI'):
             user.groups.clear()
             cI.user_set.add(user)
         elif(newLevel == 'CII'):
@@ -179,6 +188,8 @@ def updateDEALevel(request):
             if(g.name == 'DEA_CI'):
                 usersAndLevels.append((u, g.name))
                 break
+            else:
+                usersAndLevels.append((u, g.name))
 
     context_dict['users'] = usersAndLevels
     return render(request, 'DEApermissions.html', context=context_dict )
@@ -224,6 +235,7 @@ def makeDrugs(request):
         return redirect("/home", request)
     else:
         #Make the drug croups based on the DEA SCHEDULE
+        c0, created = Group.objects.get_or_create(name='DEA_C0')
         cI, created = Group.objects.get_or_create(name='DEA_CI')
         cII, created = Group.objects.get_or_create(name='DEA_CII')
         cIII, created = Group.objects.get_or_create(name='DEA_CIII')
