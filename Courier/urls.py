@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^login$', login, {'template_name':'login.html'}, name='login'),
     url(r'^logout$', logOut, name='logout'),
+    url(r'^makeDrugs$', makeDrugs), 
     url(r'^', home, name='home'),
 
 

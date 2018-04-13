@@ -18,7 +18,10 @@ pytz = "*"
 gunicorn = "*"
 whitenoise = "*"
 dj-database-url = "*"
+pandas = "*"
+xlrd = "*"
 
 
 [dev-packages]
 
+pylint = "*"
