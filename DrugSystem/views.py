@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User, Group, Permission
@@ -18,6 +18,80 @@ def logOut(request):
     logout(request)
     print('Logged out')
     return redirect('/login')
+
+@csrf_exempt
+def register(request):
+    print('Registation')
+    #Note the email will be the userName and the email
+    #By default they are added to LEVEL 1 there are five levels based off DEA levels for controled substacens
+
+    context = {}
+    context['usernameNotAvailable'] = False
+
+    #Get the free user group and add permissions
+    userType = ContentType.objects.get_for_model(User)
+    cI, created = Group.objects.get_or_create(name='DEA_CI')
+    buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
+    cI.permissions.add(buyCI)
+
+
+    if(request.POST):
+
+        userName = request.POST.get('username')
+        password = request.POST.get('password')
+        firstN = request.POST.get('firstN')
+        lastN = request.POST.get('lastN')
+        companyN = request.POST.get('companyN')
+
+       
+
+        print(userName)
+        if(User.objects.filter(username=userName).exists()):
+            context['usernameNotAvailable'] = True
+            return render(request, 'index.html', context=context)        
+        else:
+            #If wer get everything from the request
+            if( all((userName, password, firstN, lastN, companyN))):
+                #make the new user
+                newUser = User()
+                newUser.username = userName
+                newUser.email = userName
+                newUser.set_password(password)
+                newUser.first_name = firstN
+                newUser.last_name = lastN
+                newUser.save()
+
+                newClient = Client()
+                newClient.user = newUser
+                newClient.companyName = companyN
+                newClient.save()
+
+                print('Made the user')
+
+                #Add them to the free group
+                cI.user_set.add(newUser)
+                print('Added to Level CI')
+
+                login(user=newUser, request=request)
+                return redirect("/home", request=request)
+            else:
+                return HttpResponse(400, 'Please include all of the informaiton')
+
+    return render(request, 'index.html', context=context) #Note need to TODO: Chagne to the right template
+
+
+@csrf_exempt
+def checkUserName(request):
+    if (request.POST):
+        data = {}
+
+        userName = request.POST.get('username')
+        if (User.objects.filter(username=userName).exists()):
+            data['available'] = False
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data['available'] = True
+            return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def home(request):
