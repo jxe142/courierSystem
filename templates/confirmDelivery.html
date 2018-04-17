@@ -5,14 +5,14 @@
             <script>
               $(document).ready(function(){
                   $("#search_submit").click(function(){
-                      $.post("trackOrder",
+                      $.post("confirmOrder",
                       {
                           confirmNum: document.getElementById("search_box").value,
                       },
                       function(data,status){
                           //alert("Data: " + data["drug"] );
                           if(data['success'] != "The Order could not be found"){
-                              var textNode = document.createTextNode(data["order"]);
+                              var textNode = document.createTextNode(data["success"]);
       
                               $("#OrderLocation").html("");
                               $("#OrderLocation").html(textNode);
@@ -28,7 +28,7 @@
     </head>
 
     <body>
-        <h2>Cancel Order</h2>
+        <h2>Confirm Order</h2>
    
         <form method="POST" action="NDCsearch">
                 <input  id="search_box" type="text" name="search_box"  placeholder="Enter Confirmation Number">

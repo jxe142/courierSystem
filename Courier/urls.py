@@ -24,6 +24,7 @@ from DrugSystem.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^cancelOrder$', cancelOrder),
+    url(r'^confirmOrder$', confirmOrderDelivery),
     url(r'^trackOrder', getOrderLocation),
     url(r'^login$', login, {'template_name':'login.html'}, name='login'),
     url(r'^logout$', logOut, name='logout'),

@@ -239,21 +239,26 @@ def cancelOrder(request):
 
     return render(request, 'cancelOrder.html')
        
-
+@csrf_exempt
 @login_required
 def confirmOrderDelivery(request):
+    data = {}
     if(request.user.is_superuser):
          if(request.method == "POST"):
             confirm = request.POST.get('confirmNum')
             order = Orders.objects.filter(confirmNum=confirm).first()
-            order.isDelivered = True
-            order.save()
-            context['success'] = "The Order has been Delivered"
-            return render(request, 'index.html', context=context)
+            if(order == None):
+                data['success'] = "The Order could not be found"
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                order.isDelivered = True
+                order.save()
+                data['success'] = "The Order has been Delivered"
+                return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return render(request, 'index.html')
 
-    return render(request, 'cancelOrder.html', )
+    return render(request, 'confirmDelivery.html', )
 
 
 
@@ -279,11 +284,6 @@ def getOrderLocation(request):
 def updateDEALevel(request):
     context_dict = {}
 
-
-    # if(not request.user.is_superuser):
-    #     print('Not Super')
-    #     return redirect("/home", request)
-    # else:
     if(request.user.is_superuser):
         if(request.method == "POST"): #go in and add the users to the groups we specified
             userType = ContentType.objects.get_for_model(User)
