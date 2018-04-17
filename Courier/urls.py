@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^makeDrugs$', makeDrugs), 
     url(r'^makeOrder$', makeOrder),
     url(r'^register', register),
+    url(r'^NDCsearch$', searchNDC),
     url(r'^updateDEA$', updateDEALevel),
     url(r'^', home, name='home'),
 

@@ -21,7 +21,7 @@ class Drugs(models.Model):
     quanity =  models.IntegerField(default=100)
     dosageFormName = models.TextField()
     DEALvl = models.CharField(max_length=10, default="CI")
-    user = models.ForeignKey(Client, on_delete=models.CASCADE, default=2)
+
 
 
 
@@ -30,6 +30,8 @@ class Orders(models.Model):
     description = models.CharField(max_length=1000)
     cost = models.IntegerField()
     drugs = models.ManyToManyField(Drugs)
+    user = models.ForeignKey(Client, on_delete=models.CASCADE, default=2)
+    confirmNum = models.TextField(default="1afda")
 
 
 

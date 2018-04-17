@@ -1,47 +1,64 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script>
+        $(document).ready(function(){
+            $("#search_submit").click(function(){
+                $.post("NDCsearch",
+                {
+                    NDC: document.getElementById("search_box").value,
+                },
+                function(data,status){
+                    alert("Data: " + data["drug"] );
+                    var textNode = document.createTextNode(data["drug"]);
+                    var node = document.createElement("input");
+                    node.type = "checkbox"
+                    node.name = "drugs[]";
+                    node.value = data["drug"];
+                    var nodeNumber = document.createElement("input");
+                    nodeNumber.type = "number";
+                    nodeNumber.name = data["drug"];
+                    nodeNumber.min = 0;
+                    nodeNumber.max = 100;
 
+                    $("#myOrder").append(textNode);
+                    $("#myOrder").append(node);
+                    $("#myOrder").append(nodeNumber);
+                    $("#myOrder").append("<br />");                    
+
+                });
+            });
+        });
+        </script>
     </head>
 
     <body>
 
   <h2>MakeOrder</h2>
 
-  
-  
-  {% for drug in lvl5 %}
-    {{drug.NDC}}
-    {{drug.name}}
-    <br />
-  {% endfor %}
-  
-  
-  {% for drug in lvl4 %}
-        {{drug.NDC}}
-        {{drug.name}}
-        <br />
-  {% endfor %}
-  
-  {% for drug in lvl3 %}
-        {{drug.NDC}}
-        {{drug.name}}
-        <br />
-  {% endfor %}
 
-  {% for drug in lvl2 %}
-    {{drug.NDC}}
-    {{drug.name}}
-    <br />
-  {% endfor %}
+  <form method="POST" action="NDCsearch" style="margin: 0">
+        <input  id="search_box" type="text" name="search_box"  placeholder="Enter the NDC">
+        <button id="search_submit" type="button">Submit</button>
+  </form>
 
-  {% for drug in lvl1 %}
-    {{drug.NDC}}
-    {{drug.name}}
-    <br />
-  {% endfor %}
- 
-  {{lvl0}}
+  <br/>
+  <h3>Order</h3>
+  <form method="POST" action="makeOrder">
+    <h4>Drugs</h4>  
+    <div id="myOrder">
+
+      </div>
+
+    
+      <h4>Description</h4>  
+      <input type="text" name="descript">
+        <!--<input type="checkbox" name="drugs[]" value={{drug.NDC}}> 
+        <input type="number" name={{drug.NDC}} min=0 max=100> -->
+
+    <button id="orderSubmit" type="submit">Submit</button>        
+  </form>
 
     </body>
 
