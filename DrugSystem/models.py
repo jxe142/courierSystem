@@ -21,6 +21,7 @@ class Drugs(models.Model):
     quanity =  models.IntegerField(default=100)
     dosageFormName = models.TextField()
     DEALvl = models.CharField(max_length=10, default="CI")
+    user = models.ForeignKey(Client, on_delete=models.CASCADE, default=2)
 
 
 

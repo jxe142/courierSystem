@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^login$', login, {'template_name':'login.html'}, name='login'),
     url(r'^logout$', logOut, name='logout'),
     url(r'^makeDrugs$', makeDrugs), 
+    url(r'^makeOrder$', makeOrder),
     url(r'^register', register),
     url(r'^updateDEA$', updateDEALevel),
     url(r'^', home, name='home'),

@@ -93,6 +93,59 @@ def checkUserName(request):
             data['available'] = True
             return HttpResponse(json.dumps(data), content_type='application/json')
 
+@login_required
+def makeOrder(request):
+    print("In fun")
+    user = request.user
+    context_dict = {}
+
+    if(request.method == "POST"):
+        pass
+        
+
+    #Gets the drug objects to show to the front end
+
+    if(user.groups.filter(name ='DEA_CV')):
+        print("Level 5")
+        lvl5 = Drugs.objects.filter().all()
+        context_dict['lvl5'] = lvl5
+    elif(user.groups.filter(name='DEA_CIV')):
+        print("Level 4")
+        lvl1 = Drugs.objects.filter(DEALvl="CI")
+        context_dict['lvl1'] = lvl1
+        lvl2 = Drugs.objects.filter(DEALvl="CII")
+        context_dict['lvl2'] = lvl2
+        lvl3 = Drugs.objects.filter(DEALvl="CIII")
+        context_dict['lvl3'] = lvl3
+        lvl4 = Drugs.objects.filter(DEALvl="CIV")
+        context_dict['lvl4'] = lvl4
+    elif(user.groups.filter(name='DEA_CIII')):
+        print("Level 3")
+        lvl1 = Drugs.objects.filter(DEALvl="CI")
+        context_dict['lvl1'] = lvl1
+        lvl2 = Drugs.objects.filter(DEALvl="CII")
+        context_dict['lvl2'] = lvl2
+        lvl3 = Drugs.objects.filter(DEALvl="CIII")
+        context_dict['lvl3'] = lvl3
+    elif(user.groups.filter(name='DEA_CII')):
+        print("Level 2")
+        lvl1 = Drugs.objects.filter(DEALvl="CI")
+        context_dict['lvl1'] = lvl1
+        lvl2 = Drugs.objects.filter(DEALvl="CII")
+        context_dict['lvl2'] = lvl2
+    elif(user.groups.filter(name='DEA_CI')):
+        print("Level 1")
+        lvl1 = Drugs.objects.filter(DEALvl="CI")
+        context_dict['lvl1'] = lvl1
+    else:
+        print("Level 0")
+        context_dict['lvl0'] = 'You do not have permissins to order druges yet please conatnat an admin'
+
+    print("At the end")
+    return render(request, 'makeOrder.html', context=context_dict)
+
+
+
 @csrf_exempt
 @login_required
 def updateDEALevel(request):

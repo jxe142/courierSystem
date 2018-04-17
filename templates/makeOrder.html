@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+
+    <body>
+
+  <h2>MakeOrder</h2>
+
+  
+  
+  {% for drug in lvl5 %}
+    {{drug.NDC}}
+    {{drug.name}}
+    <br />
+  {% endfor %}
+  
+  
+  {% for drug in lvl4 %}
+        {{drug.NDC}}
+        {{drug.name}}
+        <br />
+  {% endfor %}
+  
+  {% for drug in lvl3 %}
+        {{drug.NDC}}
+        {{drug.name}}
+        <br />
+  {% endfor %}
+
+  {% for drug in lvl2 %}
+    {{drug.NDC}}
+    {{drug.name}}
+    <br />
+  {% endfor %}
+
+  {% for drug in lvl1 %}
+    {{drug.NDC}}
+    {{drug.name}}
+    <br />
+  {% endfor %}
+ 
+  {{lvl0}}
+
+    </body>
+
+</html>
