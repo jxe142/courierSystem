@@ -31,7 +31,10 @@ class Orders(models.Model):
     cost = models.IntegerField()
     drugs = models.ManyToManyField(Drugs)
     user = models.ForeignKey(Client, on_delete=models.CASCADE, default=2)
-    confirmNum = models.TextField(default="1afda")
+    confirmNum = models.TextField(blank=False)
+    isDelivered = models.BooleanField(default=False)
+    location = models.TextField()
+    canceled = models.BooleanField(default=False)
 
 
 

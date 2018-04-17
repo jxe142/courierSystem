@@ -194,6 +194,25 @@ def getPastOrders(request):
 
     return render(request, 'pastOrders.html', context=context)
 
+
+
+#________________MAKE FUNS FOR CANCELING, TRACKING AND CONFIMING ORDER SHIPP
+@login_required
+def updateOrderLocation(request):
+    pass
+    
+@login_required
+def getOrderLocation(request):
+    pass
+
+@login_required
+def cancelOrder(request):
+    pass
+
+@login_required
+def confirmOrderDelivery(request):
+    pass
+
 @csrf_exempt
 @login_required
 def updateDEALevel(request):
