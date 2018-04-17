@@ -23,6 +23,8 @@ from DrugSystem.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^cancelOrder$', cancelOrder),
+    url(r'^trackOrder', getOrderLocation),
     url(r'^login$', login, {'template_name':'login.html'}, name='login'),
     url(r'^logout$', logOut, name='logout'),
     url(r'^makeDrugs$', makeDrugs), 
@@ -31,6 +33,7 @@ urlpatterns = [
     url(r'^register', register),
     url(r'^NDCsearch$', searchNDC),
     url(r'^updateDEA$', updateDEALevel),
+    url(r'^updateLocation$', updateOrderLocation),
     url(r'^', home, name='home'),
 
 

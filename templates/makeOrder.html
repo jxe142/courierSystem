@@ -10,22 +10,26 @@
                     NDC: document.getElementById("search_box").value,
                 },
                 function(data,status){
-                    alert("Data: " + data["drug"] );
-                    var textNode = document.createTextNode(data["drug"]);
-                    var node = document.createElement("input");
-                    node.type = "checkbox"
-                    node.name = "drugs[]";
-                    node.value = data["drug"];
-                    var nodeNumber = document.createElement("input");
-                    nodeNumber.type = "number";
-                    nodeNumber.name = data["drug"];
-                    nodeNumber.min = 0;
-                    nodeNumber.max = 100;
+                    //alert("Data: " + data["drug"] );
+                    if(data['drug'] != "NDC doesn't exist"){
+                        var textNode = document.createTextNode(data["drug"]);
+                        var node = document.createElement("input");
+                        node.type = "checkbox"
+                        node.name = "drugs[]";
+                        node.value = data["drug"];
+                        var nodeNumber = document.createElement("input");
+                        nodeNumber.type = "number";
+                        nodeNumber.name = data["drug"];
+                        nodeNumber.min = 0;
+                        nodeNumber.max = 100;
 
-                    $("#myOrder").append(textNode);
-                    $("#myOrder").append(node);
-                    $("#myOrder").append(nodeNumber);
-                    $("#myOrder").append("<br />");                    
+                        $("#myOrder").append(textNode);
+                        $("#myOrder").append(node);
+                        $("#myOrder").append(nodeNumber);
+                        $("#myOrder").append("<br />");   
+                    } else {
+                        alert(data['drug']);
+                    }               
 
                 });
             });

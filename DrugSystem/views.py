@@ -174,12 +174,8 @@ def makeOrder(request):
         order.save()
 
         context['conf'] = confirmNum
-        
-        
-        
+        context['success'] = confirmNum
         return render(request, 'orderWentThrough.html', context=context)
-
-
 
     return render(request, 'makeOrder.html')
 
@@ -187,7 +183,7 @@ def makeOrder(request):
 def getPastOrders(request):
     context = {}
     client = Client.objects.get(user = request.user)
-    orders = Orders.objects.filter(user=client)
+    orders = Orders.objects.filter(user=client, canceled=False)
     for o in orders:
         print(o)
     context['orders'] = orders
@@ -197,21 +193,86 @@ def getPastOrders(request):
 
 
 #________________MAKE FUNS FOR CANCELING, TRACKING AND CONFIMING ORDER SHIPP
+@csrf_exempt
 @login_required
 def updateOrderLocation(request):
-    pass
+    data = {}
+    if(request.user.is_superuser):
+        if(request.method == "POST"):
+            confirm = request.POST.get('confirmNum')
+            newLocation = request.POST.get('location')
+            order = Orders.objects.filter(confirmNum=confirm).first()
+            if(order == None):
+                data['success'] = "The Order could not be found"
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                order.location = newLocation
+                order.save()
+                data['success'] = "The Order Location has been updated"
+                return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return render(request, 'index.html')
+        
     
-@login_required
-def getOrderLocation(request):
-    pass
+    return render(request, 'changeOrderLocation.html')
 
+@csrf_exempt
 @login_required
 def cancelOrder(request):
-    pass
+    data = {}
+    if(request.user.is_superuser):
+         if(request.method == "POST"):
+            confirm = request.POST.get('confirmNum')
+            order = Orders.objects.filter(confirmNum=confirm).first()
+            print(confirm)
+            print(order)
+            if(order == None):
+                data['success'] = "The Order could not be found"
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                order.canceled = True
+                order.save()
+                data['success'] = "The Order Location has been Cancled"
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return render(request, 'index.html')
+
+    return render(request, 'cancelOrder.html')
+       
 
 @login_required
 def confirmOrderDelivery(request):
-    pass
+    if(request.user.is_superuser):
+         if(request.method == "POST"):
+            confirm = request.POST.get('confirmNum')
+            order = Orders.objects.filter(confirmNum=confirm).first()
+            order.isDelivered = True
+            order.save()
+            context['success'] = "The Order has been Delivered"
+            return render(request, 'index.html', context=context)
+    else:
+        return render(request, 'index.html')
+
+    return render(request, 'cancelOrder.html', )
+
+
+
+@csrf_exempt  
+@login_required
+def getOrderLocation(request):
+    context = data = {}
+    if(request.method == "POST"):
+        try:
+            confirm = request.POST.get('confirmNum')
+            order = Orders.objects.filter(confirmNum=confirm).first()
+            context['order'] = order
+            data['order'] = order.location
+        except:
+            data['order'] = "Confirmation Number doesn't exist"
+
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return render(request, 'trackOrder.html')
+ 
 
 @csrf_exempt
 @login_required
@@ -223,95 +284,99 @@ def updateDEALevel(request):
     #     print('Not Super')
     #     return redirect("/home", request)
     # else:
-    if(request.method == "POST"): #go in and add the users to the groups we specified
-        userType = ContentType.objects.get_for_model(User)
-        c0, created = Group.objects.get_or_create(name='DEA_C0')
-        buyC0, created = Permission.objects.get_or_create(name='Buy C0',codename='C0Buyer', content_type=userType)
-        c0.permissions.add(buyC0)
+    if(request.user.is_superuser):
+        if(request.method == "POST"): #go in and add the users to the groups we specified
+            userType = ContentType.objects.get_for_model(User)
+            c0, created = Group.objects.get_or_create(name='DEA_C0')
+            buyC0, created = Permission.objects.get_or_create(name='Buy C0',codename='C0Buyer', content_type=userType)
+            c0.permissions.add(buyC0)
 
 
-        cI, created = Group.objects.get_or_create(name='DEA_CI')
-        buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
-        cI.permissions.add(buyCI)
+            cI, created = Group.objects.get_or_create(name='DEA_CI')
+            buyCI, created = Permission.objects.get_or_create(name='Buy CI',codename='CIBuyer', content_type=userType)
+            cI.permissions.add(buyCI)
 
-        cII, created = Group.objects.get_or_create(name='DEA_CII')
-        buyCII, created = Permission.objects.get_or_create(name='Buy CII',codename='CIIBuyer', content_type=userType)
-        cII.permissions.add(buyCI)
-        cII.permissions.add(buyCII)
+            cII, created = Group.objects.get_or_create(name='DEA_CII')
+            buyCII, created = Permission.objects.get_or_create(name='Buy CII',codename='CIIBuyer', content_type=userType)
+            cII.permissions.add(buyCI)
+            cII.permissions.add(buyCII)
 
-        cIII, created = Group.objects.get_or_create(name='DEA_CIII')
-        buyCIII, created = Permission.objects.get_or_create(name='Buy CIII',codename='CIIIBuyer', content_type=userType)
-        cIII.permissions.add(buyCI)
-        cIII.permissions.add(buyCII)
-        cIII.permissions.add(buyCIII)
+            cIII, created = Group.objects.get_or_create(name='DEA_CIII')
+            buyCIII, created = Permission.objects.get_or_create(name='Buy CIII',codename='CIIIBuyer', content_type=userType)
+            cIII.permissions.add(buyCI)
+            cIII.permissions.add(buyCII)
+            cIII.permissions.add(buyCIII)
 
-        cIV, created = Group.objects.get_or_create(name='DEA_CIV')
-        buyCIV, created = Permission.objects.get_or_create(name='Buy CIV',codename='CIVBuyer', content_type=userType)
-        cIV.permissions.add(buyCI)
-        cIV.permissions.add(buyCII)
-        cIV.permissions.add(buyCIII)
-        cIV.permissions.add(buyCIV)
+            cIV, created = Group.objects.get_or_create(name='DEA_CIV')
+            buyCIV, created = Permission.objects.get_or_create(name='Buy CIV',codename='CIVBuyer', content_type=userType)
+            cIV.permissions.add(buyCI)
+            cIV.permissions.add(buyCII)
+            cIV.permissions.add(buyCIII)
+            cIV.permissions.add(buyCIV)
 
 
-        cV, created = Group.objects.get_or_create(name='DEA_CV')
-        buyCV, created = Permission.objects.get_or_create(name='Buy CV',codename='CVBuyer', content_type=userType)
-        cV.permissions.add(buyCI)
-        cV.permissions.add(buyCII)
-        cV.permissions.add(buyCIII)
-        cV.permissions.add(buyCIV)
-        cV.permissions.add(buyCV)
+            cV, created = Group.objects.get_or_create(name='DEA_CV')
+            buyCV, created = Permission.objects.get_or_create(name='Buy CV',codename='CVBuyer', content_type=userType)
+            cV.permissions.add(buyCI)
+            cV.permissions.add(buyCII)
+            cV.permissions.add(buyCIII)
+            cV.permissions.add(buyCIV)
+            cV.permissions.add(buyCV)
+            
+            user = request.POST.get('user')
+            newLevel = request.POST.get('selectedLvl')
+            user = User.objects.get(username=user)
+
+
+            if(newLevel == 'C0'):
+                user.groups.clear()
+                c0.user_set.add(user)
+            elif(newLevel == 'CI'):
+                user.groups.clear()
+                cI.user_set.add(user)
+            elif(newLevel == 'CII'):
+                user.groups.clear()
+                cII.user_set.add(user)
+            elif(newLevel == 'CIII'):
+                user.groups.clear()
+                cIII.user_set.add(user)
+            elif(newLevel == "CIV"):
+                user.groups.clear()
+                cIV.user_set.add(user)
+            elif(newLevel == 'CV'):
+                user.groups.clear()
+                cV.user_set.add(user)
+
+            print(user)
+            print(newLevel)
+
+        print("Not POST")
+        usersAndLevels = []
+        users = Client.objects.filter().all()
+        for u in users:
+            for g in u.user.groups.all():
+                if(g.name == 'DEA_CV'):
+                    usersAndLevels.append((u, g.name))
+                    break
+                if(g.name == 'DEA_CIV'):
+                    usersAndLevels.append((u, g.name))
+                    break
+                if(g.name == 'DEA_CIII'):
+                    usersAndLevels.append((u, g.name))
+                    break
+                if(g.name == 'DEA_CII'):
+                    usersAndLevels.append((u, g.name))
+                    break
+                if(g.name == 'DEA_CI'):
+                    usersAndLevels.append((u, g.name))
+                    break
+                else:
+                    usersAndLevels.append((u, g.name))
+
+        context_dict['users'] = usersAndLevels
+    else:
+        return render(request, 'index.html')
         
-        user = request.POST.get('user')
-        newLevel = request.POST.get('selectedLvl')
-        user = User.objects.get(username=user)
-
-
-        if(newLevel == 'C0'):
-            user.groups.clear()
-            c0.user_set.add(user)
-        elif(newLevel == 'CI'):
-            user.groups.clear()
-            cI.user_set.add(user)
-        elif(newLevel == 'CII'):
-            user.groups.clear()
-            cII.user_set.add(user)
-        elif(newLevel == 'CIII'):
-            user.groups.clear()
-            cIII.user_set.add(user)
-        elif(newLevel == "CIV"):
-            user.groups.clear()
-            cIV.user_set.add(user)
-        elif(newLevel == 'CV'):
-            user.groups.clear()
-            cV.user_set.add(user)
-
-        print(user)
-        print(newLevel)
-
-    print("Not POST")
-    usersAndLevels = []
-    users = Client.objects.filter().all()
-    for u in users:
-        for g in u.user.groups.all():
-            if(g.name == 'DEA_CV'):
-                usersAndLevels.append((u, g.name))
-                break
-            if(g.name == 'DEA_CIV'):
-                usersAndLevels.append((u, g.name))
-                break
-            if(g.name == 'DEA_CIII'):
-                usersAndLevels.append((u, g.name))
-                break
-            if(g.name == 'DEA_CII'):
-                usersAndLevels.append((u, g.name))
-                break
-            if(g.name == 'DEA_CI'):
-                usersAndLevels.append((u, g.name))
-                break
-            else:
-                usersAndLevels.append((u, g.name))
-
-    context_dict['users'] = usersAndLevels
     return render(request, 'DEApermissions.html', context=context_dict )
 
         

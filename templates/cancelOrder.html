@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script>
+              $(document).ready(function(){
+                  $("#search_submit").click(function(){
+                      $.post("cancelOrder",
+                      {
+                          confirmNum: document.getElementById("search_box").value,
+                      },
+                      function(data,status){
+                          //alert("Data: " + data["drug"] );
+                          if(data['success'] != "The Order could not be found"){
+                              var textNode = document.createTextNode(data["success"]);
+      
+                              $("#OrderLocation").html("");
+                              $("#OrderLocation").html(textNode);
+                          } else {
+                              alert(data['success']);
+                          }               
+      
+                      });
+                  });
+              });
+              </script>
+
+    </head>
+
+    <body>
+        <h2>Cancel Order</h2>
+   
+        <form method="POST" action="NDCsearch">
+                <input  id="search_box" type="text" name="search_box"  placeholder="Enter Confirmation Number">
+                <button id="search_submit" type="button">Submit</button>
+        </form>
+
+        <div id="OrderLocation">
+
+        </div>
+    </body>
+
+</html>
