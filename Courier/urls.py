@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^logout$', logOut, name='logout'),
     url(r'^makeDrugs$', makeDrugs), 
     url(r'^makeOrder$', makeOrder),
+    url(r'^pastOrders$', getPastOrders),
     url(r'^register', register),
     url(r'^NDCsearch$', searchNDC),
     url(r'^updateDEA$', updateDEALevel),

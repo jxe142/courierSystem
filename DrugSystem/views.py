@@ -169,6 +169,8 @@ def makeOrder(request):
         confirmNum = random.uniform(0,1000000000000)
         order.confirmNum = confirmNum
         order.cost = 10000
+        client = Client.objects.get(user = request.user)
+        order.user = client
         order.save()
 
         context['conf'] = confirmNum
@@ -181,7 +183,16 @@ def makeOrder(request):
 
     return render(request, 'makeOrder.html')
 
+@login_required
+def getPastOrders(request):
+    context = {}
+    client = Client.objects.get(user = request.user)
+    orders = Orders.objects.filter(user=client)
+    for o in orders:
+        print(o)
+    context['orders'] = orders
 
+    return render(request, 'pastOrders.html', context=context)
 
 @csrf_exempt
 @login_required
