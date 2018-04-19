@@ -30,47 +30,71 @@
     <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
 
     <!-- Template css -->
-    <link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.min.css' %}">   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-   
-   <!--Ussed to check if the passwords are the same-->
     <script>
-        function CheckPass() {
-         var password = $("#InputPassword").val();
-         var password2 = $("#InputPassword2").val();
+      $(document).ready(function(){
+          $("#submint").click(function(){
+              $.post("NDCsearch",
+              {
+                  NDC: document.getElementById("input-search").value,
+              },
+              function(data,status){
+                  //alert("Data: " + data["drug"] );
+                  if(data['drug']){
+                      var textNode = document.createTextNode(data["drug"]);
+                      var node = document.createElement("input");
+                      node.type = "checkbox"
+                      node.name = "drugs[]";
+                      node.classList.add("input-lg")
+                      node.width = "30px"
+                      node.height = "30px"
 
-         if(password != password2){
-           alert("Your passwords are not the same");
-         }
+                      node.value = data["drug"];
+                      var nodeNumber = document.createElement("input");
+                      nodeNumber.type = "number";
+                      nodeNumber.name = data["drug"];
+                      nodeNumber.min = 0;
+                      nodeNumber.max = 100;
 
-          }
-          function onChange2(){
-           $("#InputPassword2").change( function() {CheckPass()});
+                      $("#NDC").append(textNode);
+                      $("#selectedNDC").append(node);
+                      $("#NDCNum").append(nodeNumber);
+                      $("#NDC").append("<br />");   
+                      $("#selectedNDC").append("<br />");
+                      $("#NDCNum").append("<br />");
 
-          }
-          $(document).ready(onChange2);
+                  } else {
+                      alert(data['failed']);
+                  }               
 
-    </script>
-    <script type="application/javascript">
-
-      function CheckId() {
-      $.post('/checkUserName', {username: $('#InputEmail').val()},
-          function(data){
-              console.log(data);
-
-              if(data['available'] == true){
-                  console.log("Email is good");
-              } else {
-                  console.log("Email is bad");
-                  alert('That Email has been used please user another');
-              }
+              });
+          });
       });
-      }
-      function onChange(){
-       $("#InputEmail").change( function() {CheckId()});
-      }
-      $(document).ready(onChange);
- </script>
+      </script>
+      <script>
+            $(document).ready(function(){
+                $("#search_submit").click(function(){
+                    $.post("trackOrder",
+                    {
+                        confirmNum: document.getElementById("search_box").value,
+                    },
+                    function(data,status){
+                        //alert("Data: " + data["order"] );
+                        if(data['order'] != "Confirmation Number doesn't exist"){
+                            var textNode = document.createTextNode(data["order"]);
+      
+                            $("#OrderLocation").html("");
+                            $("#OrderLocation").html(textNode);
+                            //console.log(textNode);
+                        } else {
+                            alert(data['order']);
+                        }               
+      
+                    });
+                });
+            });
+        </script>
   </head>
   <body>
 
@@ -94,7 +118,7 @@
               <nav class="nav ml-auto">
 
                 {% if user.is_authenticated %}
-                <a class="nav-link d-none d-sm-block" href="account-order.html"><i class="material-icons">list</i> Track Order</a>
+                <a class="nav-link d-none d-sm-block" href="#" data-toggle="modal" data-target="#trackModal"><i class="material-icons">list</i> Track Order</a>
                 {% endif %}
 
                 {% if user.is_authenticated %}
@@ -120,114 +144,67 @@
 
 
     <!-- Middle Header -->
-
-    <div class="middle-header" id="middle-header">
-
-      <div class="container-fluid limited position-relative">
-
-
-
-
-        <div class="row">
-
-
-
-          <div class="col-4 d-flex d-md-none align-items-center">
-
-            <a href="#" class="text-dark" data-toggle="modal" data-target="#menuModal"><i class="material-icons md-2">menu</i></a>
-
-          </div>
-
-          <div class="col-4 col-md-auto d-flex align-items-center justify-content-center justify-content-md-start">
-
-            <a href="index.html" class="logo">
-
-                <img src="{% static 'img/logo.jpg' %}" alt="Elva .J Pharmacy" class="d-none d-md-block">
-
-                <img src="{% static 'img/logo1.jpg' %}" alt="Elva .J Pharmacy" class="d-block d-md-none">
-
-            </a>
-
-          </div>
-
-          <div class="col d-none d-md-block position-static">
-
-            <nav class="navbar nav main-nav justify-content-center justify-content-md-start position-static p-0">
-
-              <a class="nav-link" href="home">HOME</a>
-
-              <div class="nav-item dropdown">
-
-                <a href="#" class="nav-link dropdown-toggle no-caret" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">SHOP</a>
-
-                <div class="dropdown-menu animate">
-
-                  <a class="dropdown-item" href="shop.html">Pain Medications</a>
-
-                  <a class="dropdown-item" href="shop-list.html">Antibiotics</a>
-
-                  <a class="dropdown-item" href="cart.html">Antiseptic</a>
-
-                  <a class="dropdown-item" href="checkout.html">Kids Medication</a>
-
-                  </div>
-
-              </div>
-
-              
-              
-              <div class="nav-item dropdown">
-
-                <a href="#" class="nav-link dropdown-toggle no-caret" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">PAGES</a>
-
-                <div class="dropdown-menu animate">
-
-                  
-                  
-                  <a class="dropdown-item" href="contact.html">Contact Us</a>
-
+        <div class="middle-header" id="middle-header">
+                <div class="container-fluid limited position-relative">
         
-                  
-                  <a class="dropdown-item" href="login">Login</a>
-
-                  <a class="dropdown-item" href="register">Register</a>
-
-                  
+                <div class="input-search-wrapper invisible">
+                    <input type="text" class="form-control" id="input-search" placeholder="Search NDC" aria-label="Search NDC">
+                   <!-- <span class="rounded-circle bg-dark text-white toggle-search"><i class="small material-icons">close</i></span> -->
+                    <span class="rounded-circle bg-dark text-white toggle-search"><input id='submint' type="submit"> </span>
                 </div>
-
-              </div>
-
-            </nav>
-
-          </div>
-
-          {% if user.is_authenticated %}
-          <div class="col-4 col-md-auto d-flex align-items-center justify-content-end pl-0">
-
-            <nav class="nav nav-counter">
-
-              <a href="#" class="nav-link toggle-search"><img src="img/search.svg" alt="search"></a>
-
-              
-              <a href="#" class="nav-link counter" data-toggle="modal" data-target="#cartModal"><span>0</span><img src="img/bag.svg" alt="bag"></a>
-
-            </nav>
-
-          </div>
-          {% endif %}
-
-
-
-
-        </div>
-
-      </div>
-
-    </div>
+        
+                <div class="row">
+        
+                    <div class="col-4 d-flex d-md-none align-items-center">
+                    <a href="#" class="text-dark" data-toggle="modal" data-target="#menuModal"><i class="material-icons md-2">menu</i></a>
+                    </div>
+                    <div class="col-4 col-md-auto d-flex align-items-center justify-content-center justify-content-md-start">
+                    <a href="home" class="logo">
+                        <img src="{% static 'img/logo.jpg' %}" alt="Elva .J Pharmacy" class="d-none d-md-block">
+                        <img src="{% static 'img/logo1.jpg' %}" alt="Elva .J Pharmacy" class="d-block d-md-none">
+                    </a>
+                    </div>
+                    <div class="col d-none d-md-block position-static">
+                    <nav class="navbar nav main-nav justify-content-center justify-content-md-start position-static p-0">
+                        <a class="nav-link" href="home">HOME</a>
+                        <div class="nav-item dropdown">
+                        <a href="makeOrder" class="nav-link dropdown-toggle no-caret" role="button" aria-haspopup="true" aria-expanded="false">SHOP</a>
+                        </div>
+                        
+                        
+                        <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle no-caret" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">PAGES</a>
+                        <div class="dropdown-menu animate">
+                            
+                            
+                            <a class="dropdown-item" href="contanctUs">Contact Us</a>
+                
+                            
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+                            <a class="dropdown-item" href="register">Register</a>
+                            
+                        </div>
+                        </div>
+                    </nav>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div class="col-4 col-md-auto d-flex align-items-center justify-content-end pl-0">
+                        <nav class="nav nav-counter">
+                        <a href="#" class="nav-link toggle-search"><img src="{% static 'img/search.svg' %}" alt="search"></a>
+                        
+                        
+                        <a href="#" class="nav-link counter" data-toggle="modal" data-target="#cartModal"><span>0</span><img src="{% static 'img/bag.svg' %}" alt="bag"></a>
+                        </nav>
+                    </div>
+                    {% endif %}
+        
+                </div>
+                </div>
+            </div>
 
     <!-- /Middle Header -->
 
-  <form method="POST" action="register">
+  <form method="POST" action="makeOrder">
     {% csrf_token %}
     <div class="container-fluid limited mb-5">
       <div class="row justify-content-center mt-4">
@@ -236,48 +213,36 @@
             <div class="card-body pt-2">
               <div class="text-center">
                 <div class="d-inline-block border border-secondary rounded-circle text-center m-auto">
-                  <h1 class="px-2"><i class="material-icons align-middle md-3">person</i></h1>
+                  <h1 class="px-2"><i class="material-icons align-middle md-3">airport_shuttle</i></h1>
                 </div>
               </div>
-              <h5 class="card-title text-center">Create an Account</h5>
+              <h5 class="card-title text-center">Your Order</h5>
               <form>
                 <div class="form-row">
                   <div class="form-group col-md-3">
-                    <label for="InputName">First Name</label>
-                    <input type="text" name="firstN" class="form-control" id="firstN" placeholder="Enter Name">
-                  </div>
-                  <div class="form-group col-md-3">
-                      <label for="InputName">Last Name</label>
-                      <input type="text" name="lastN" class="form-control" id="lastN" placeholder="Enter Name">
+                    <label for="InputName">Drug NDC</label>
+                    <div id="NDC">
+
                     </div>
-                  <div class="form-group col-md-3">
-                    <label for="InputEmail">Email Address</label>
-                    <input type="email" name="username" class="form-control" id="InputEmail" placeholder="Enter Email">
                   </div>
                   <div class="form-group col-md-3">
-                      <label for="InputName">Company Name</label>
-                      <input type="text" name="companyN" class="form-control" id="companyN" placeholder="Enter Name">
-                    </div>
-                  <div class="form-group col-md-6">
-                    <label for="InputPassword">Password</label>
-                    <input type="password" name="password" class="form-control" id="InputPassword" placeholder="Password">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="InputPassword2">Confirm Password</label>
-                    <input type="password" class="form-control" id="InputPassword2" placeholder="Confirm Password">
-                  </div>
+                        <label for="InputName">Selected</label>
+                        <div id="selectedNDC">
+    
+                        </div>
+                      </div>
+                      <div class="form-group col-md-3">
+                            <label for="InputName">Quanity</label>
+                            <div id="NDCNum">
+        
+                            </div>
+                          </div>
                 </div>
                 <div class="form-group">
-                  <label class="mb-0" for="InputAddress">Address</label>
-                  <textarea class="form-control" name="address" id="InputAddress" rows="2"></textarea>
-                </div>
+                        <label class="mb-0" for="InputAddress">Description</label>
+                        <textarea class="form-control" name="descript" id="InputAddress" rows="2"></textarea>
+                      </div>
                 <button type="submit" class="btn btn-theme btn-sm btn-block my-3">Submit</button>
-                <div class="form-group mt-3 text-center">Or Register using</div>
-                <div class="text-center share-link">
-                  <button type="button" class="btn btn-primary btn-sm"><svg fill="#fff" viewBox="0 0 24 24"><path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" /></svg> Facebook</button>
-                  <button type="button" class="btn btn-info btn-sm"><svg fill="#fff" viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z" /></svg> Twitter</button>
-                  <button type="button" class="btn btn-danger btn-sm"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,11V13.4H12C11.8,14.4 10.8,16.4 8,16.4C5.6,16.4 3.7,14.4 3.7,12C3.7,9.6 5.6,7.6 8,7.6C9.4,7.6 10.3,8.2 10.8,8.7L12.7,6.9C11.5,5.7 9.9,5 8,5C4.1,5 1,8.1 1,12C1,15.9 4.1,19 8,19C12,19 14.7,16.2 14.7,12.2C14.7,11.7 14.7,11.4 14.6,11H8Z" /></svg> Google Plus</button>
-                </div>
               </form>
             </div>
           </div>
@@ -320,6 +285,32 @@
       </div>
     </div>
 </form>
+
+<!-- Modal Track Order -->
+<div class="modal fade modal-login" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">Enter Your Confirmation Number</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input  id="search_box" type="text" name="search_box"  placeholder="Confirmation Number">
+                  <button id="search_submit" type="button">Submit</button>
+              </div>
+              <div id="OrderLocation">
+    
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<br/>
+
 
      <!-- Footer -->
      <div class="footer">

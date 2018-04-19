@@ -173,12 +173,11 @@ def searchNDC(request):
                 drug = Drugs.objects.get(NDC=NDC)
                 if(drug.DEALvl == 'CI'):
                     data['drug'] = NDC
-                else:
-                    data['drug'] = "You Do not have high enough cleareance for this"
             else:
-                data['drug'] = "You Do not have high enough cleareance for this"
+                drug = Drugs.objects.get(NDC=NDC)
+                data['failed'] = "You Do not have high enough cleareance for this"
         except:
-            data['drug'] = "NDC doesn't exist"
+            data['failed'] = "NDC doesn't exist"
     
 
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -193,27 +192,30 @@ def makeOrder(request):
         drugNDCs = request.POST.getlist("drugs[]")
         descript = request.POST.get("descript")
 
-        for NDC in drugNDCs:
-            try:
-                print(NDC)
-                current = Drugs.objects.get(NDC=NDC)
-                order.drugs = current
-            except:
-                print("ERROER CANT FIND DRUG")
-        
-        order.description = descript
-        confirmNum = random.uniform(0,1000000000000)
-        order.confirmNum = confirmNum
-        order.cost = 10000
-        client = Client.objects.get(user = request.user)
-        order.user = client
-        order.save()
+        if(all((drugNDCs, descript))):
+            for NDC in drugNDCs:
+                try:
+                    print(NDC)
+                    current = Drugs.objects.get(NDC=NDC)
+                    order.drugs = current
+                except:
+                    print("ERROER CANT FIND DRUG")
+            
+            order.description = descript
+            confirmNum = random.uniform(0,1000000000000)
+            order.confirmNum = confirmNum
+            order.cost = 10000
+            client = Client.objects.get(user = request.user)
+            order.user = client
+            order.save()
 
-        context['conf'] = confirmNum
-        context['success'] = confirmNum
-        return render(request, 'orderWentThrough.html', context=context)
+            context['conf'] = confirmNum
+            context['success'] = confirmNum
+            return render(request, 'orderWentThrough.html', context=context)
+        else:
+            return render(request, 'orderFailed.html')
 
-    return render(request, 'makeOrder.html')
+    return render(request, 'order.html')
 
 @login_required
 def getPastOrders(request):
@@ -307,6 +309,7 @@ def getOrderLocation(request):
             confirm = request.POST.get('confirmNum')
             order = Orders.objects.filter(confirmNum=confirm).first()
             context['order'] = order
+            print(order.location)
             data['order'] = order.location
         except:
             data['order'] = "Confirmation Number doesn't exist"

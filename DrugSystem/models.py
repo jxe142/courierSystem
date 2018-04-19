@@ -34,7 +34,7 @@ class Orders(models.Model):
     user = models.ForeignKey(Client, on_delete=models.CASCADE, default=2)
     confirmNum = models.TextField(blank=False)
     isDelivered = models.BooleanField(default=False)
-    location = models.TextField()
+    location = models.TextField(default="Still Processing Your Order")
     canceled = models.BooleanField(default=False)
 
 
