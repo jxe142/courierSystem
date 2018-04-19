@@ -66,6 +66,7 @@
                 
 
                 {% if user.is_authenticated %}
+                 <a class="nav-link d-none d-sm-block"  href="#">Welcome {{user.first_name}}</a>
                 <a class="nav-link d-none d-sm-block" href="#" data-toggle="modal" data-target="#trackModal"><i class="material-icons">list</i> Track Order</a>
                 <a class="nav-link d-none d-sm-block" href="pastOrders"><i class="material-icons">list</i> Past Orders</a>
                   <a class="nav-link" href="logout"><i class="material-icons">person_outline</i> Sign Out</a>    
@@ -142,7 +143,12 @@
                 <div class="text-center ml-3 ml-sm-5">
                   <div class="d-inline-block h1 bg-theme text-white px-2 animate" data-animate="fadeRight">TOP BRANDS</div>
                   <div class="display-4 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeUp">WE HAVE THE BEST<br/>MEDICATION</div>
-                  <a href="shop.html" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+
+                  {% if user.is_authenticated %}
+                  <a href="makeOrder" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                  {% else %}
+                  <a href="#" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -151,7 +157,11 @@
                 <div class="text-center mr-3 mr-sm-5">
                   <div class="d-inline-block display-4 bg-dark text-white px-2 animate mb-3" data-animate="fadeLeft"></div>
                   <div class="h3 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeUp">YOUR WELL BEING<br/>IS OUR CONCERN</div>
-                  <a href="shop.html" class="btn btn-warning btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                  {% if user.is_authenticated %}
+                  <a href="makeOrder" class="btn btn-warning btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                  {% else %}
+                    <a href="#" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -161,7 +171,12 @@
                   <div class="d-inline-block h1 bg-warning font-weight-normal text-secondary px-2 animate duration-2" data-animate="fadeDown"></div>
                   <div class="display-4 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeLeft"></div>
                   <div class="d-inline-block h1 bg-dark text-white px-2 animate mb-3 duration-2" data-animate="fadeRight"></div>
-                  <div><a href="shop.html" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a></div>
+                  {% if  user.is_authenticated %}
+                  <div><a href="makeOrder" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a></div>
+                  {% else %}
+                  <div><a href="#" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a></div>
+                  {% endif %}
+
                 </div>
               </div>
             </div>
