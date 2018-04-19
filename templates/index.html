@@ -1,15 +1,364 @@
 <!DOCTYPE html>
-<html>
-    <head>
-    </head>
+<html lang="en">
+  <head>
+  {% load static %}
 
-    <body>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block content %}
-  <h2>Home</h2>
-  <p>Welcome to the home for the site</p>
-{% endblock %}
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">
+    <title>Home </title>
 
-    </body>
+    <!-- Required css -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+    <!-- Plugins css -->
+    <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
+
+    <!-- Template css -->
+    <link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+  </head>
+  <body>
+
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="container-fluid limited">
+        <div class="row">
+          <div class="col">
+            <div class="d-flex justify-content-between">
+              <nav class="nav d-none d-lg-flex">
+                
+              </nav>
+              <nav class="nav ml-auto">
+                
+                {% if user.is_authenticated %}
+                  <a class="nav-link d-none d-sm-block" href="account-order.html"><i class="material-icons">list</i> Track Order</a>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <a class="nav-link" href="logout"><i class="material-icons">person_outline</i> Sign Out</a>                
+                {% else %}
+                  <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><i class="material-icons">person_outline</i> Sign In</a>
+                {% endif %}
+
+
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Top Header -->
+
+    <!-- Middle Header -->
+    <div class="middle-header" id="middle-header">
+      <div class="container-fluid limited position-relative">
+
+        <div class="input-search-wrapper invisible">
+          <form action="#" method="post">
+            <input type="text" class="form-control" id="input-search" placeholder="Search NDC" aria-label="Search NDC">
+            <span class="rounded-circle bg-dark text-white toggle-search"><i class="small material-icons">close</i></span>
+            <input type="submit" hidden="hidden">
+          </form>
+        </div>
+
+        <div class="row">
+
+          <div class="col-4 d-flex d-md-none align-items-center">
+            <a href="#" class="text-dark" data-toggle="modal" data-target="#menuModal"><i class="material-icons md-2">menu</i></a>
+          </div>
+          <div class="col-4 col-md-auto d-flex align-items-center justify-content-center justify-content-md-start">
+            <a href="home" class="logo">
+              <img src="{% static 'img/logo.jpg' %}" alt="Elva .J Pharmacy" class="d-none d-md-block">
+              <img src="{% static 'img/logo1.jpg' %}" alt="Elva .J Pharmacy" class="d-block d-md-none">
+            </a>
+          </div>
+          <div class="col d-none d-md-block position-static">
+            <nav class="navbar nav main-nav justify-content-center justify-content-md-start position-static p-0">
+              <a class="nav-link" href="home">HOME</a>
+              <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle no-caret" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">SHOP</a>
+                <div class="dropdown-menu animate">
+                  <a class="dropdown-item" href="#">Pain Medications</a>
+                  <a class="dropdown-item" href="#">Antibiotics</a>
+                  <a class="dropdown-item" href="#">Antiseptic</a>
+                  <a class="dropdown-item" href="#">Kids Medication</a>
+                  </div>
+              </div>
+              
+              
+              <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle no-caret" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">PAGES</a>
+                <div class="dropdown-menu animate">
+                  
+                  
+                  <a class="dropdown-item" href="contanctUs">Contact Us</a>
+        
+                  
+                  <a class="dropdown-item" href="login">Login</a>
+                  <a class="dropdown-item" href="register">Register</a>
+                  
+                </div>
+              </div>
+            </nav>
+          </div>
+          {% if user.is_authenticated %}
+            <div class="col-4 col-md-auto d-flex align-items-center justify-content-end pl-0">
+              <nav class="nav nav-counter">
+                <a href="#" class="nav-link toggle-search"><img src="{% static 'img/search.svg' %}" alt="search"></a>
+                
+                
+                <a href="#" class="nav-link counter" data-toggle="modal" data-target="#cartModal"><span>0</span><img src="{% static 'img/bag.svg' %}" alt="bag"></a>
+              </nav>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    <!-- /Middle Header -->
+    <!-- Home Slider -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="swiper-container home-slider">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" data-cover="{% static 'img/slider/1.jpg' %}" data-xs-height="220px" data-sm-height="350px" data-md-height="400px" data-lg-height="430px" data-xl-height="460px">
+              <div class="swiper-overlay">
+                <div class="text-center ml-3 ml-sm-5">
+                  <div class="d-inline-block h1 bg-theme text-white px-2 animate" data-animate="fadeRight">TOP BRANDS</div>
+                  <div class="display-4 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeUp">WE HAVE THE BEST<br/>MEDICATION</div>
+                  <a href="shop.html" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide" data-cover="{% static 'img/slider/2.jpg' %}" data-xs-height="220px" data-sm-height="350px" data-md-height="400px" data-lg-height="430px" data-xl-height="460px">
+              <div class="swiper-overlay justify-content-end">
+                <div class="text-center mr-3 mr-sm-5">
+                  <div class="d-inline-block display-4 bg-dark text-white px-2 animate mb-3" data-animate="fadeLeft"></div>
+                  <div class="h3 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeUp">YOUR WELL BEING<br/>IS OUR CONCERN</div>
+                  <a href="shop.html" class="btn btn-warning btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide" data-cover="{% static 'img/slider/3.jpg' %}" data-xs-height="220px" data-sm-height="350px" data-md-height="400px" data-lg-height="430px" data-xl-height="460px">
+              <div class="swiper-overlay justify-content-center">
+                <div class="text-center">
+                  <div class="d-inline-block h1 bg-warning font-weight-normal text-secondary px-2 animate duration-2" data-animate="fadeDown"></div>
+                  <div class="display-4 text-white font-weight-bold text-shadow animate duration-2" data-animate="fadeLeft"></div>
+                  <div class="d-inline-block h1 bg-dark text-white px-2 animate mb-3 duration-2" data-animate="fadeRight"></div>
+                  <div><a href="shop.html" class="btn btn-theme btn-sm mt-3 animate delay-1" data-animate="fadeDown">ORDER NOW</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev d-none d-sm-flex" id="home-slider-prev"><i class="material-icons md-3">keyboard_arrow_left</i></div>
+          <div class="swiper-button-next d-none d-sm-flex" id="home-slider-next"><i class="material-icons md-3">keyboard_arrow_right</i></div>
+        </div>
+      </div>
+    </div>
+    <!-- /Home Slider -->
+
+    <div class="container-fluid limited mt-5">
+
+      <!-- Service Block -->
+      <div class="row no-gutters mb-3">
+        <div class="col-sm-6 col-lg-3">
+          <div class="media service-block">
+            <div class="service-block-icon">
+              <i class="material-icons">local_shipping</i>
+            </div>
+            <div class="media-body">
+              <h6>PHARMACEUTICALS SHIPPING &AMP; RETURN</h6>
+              <div class="service-block-desc">Cheap and speedy services</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+          <div class="media service-block">
+            <div class="service-block-icon">
+              <i class="material-icons">refresh</i>
+            </div>
+            <div class="media-body">
+              <h6>MONEY BACK GUARANTEE</h6>
+              <div class="service-block-desc">Get the item you ordered, or your money back</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+          <div class="media service-block">
+            <div class="service-block-icon">
+              <i class="material-icons">security</i>
+            </div>
+            <div class="media-body">
+              <h6>100% SECURE PAYMENT</h6>
+              <div class="service-block-desc">Your transaction are secure with SSL Encryption</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+          <div class="media service-block">
+            <div class="service-block-icon">
+              <i class="material-icons">phone</i>
+            </div>
+            <div class="media-body">
+              <h6>ONLINE SUPPORT 24/7</h6>
+              <div class="service-block-desc">Chat with experts or have us call you right away</div>
+            </div>
+          </div>
+        </div>
+      </div> 
+      <!-- /Service Block -->
+      </div>
+    </div>
+
+    
+              
+              
+   <!-- Modal Login -->
+   <form method="POST" action="login">
+      {% csrf_token %}
+    <div class="modal fade modal-login" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Enter Your Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputUsername">Username</label>
+              <input type="text" class="form-control" id="inputUsername" placeholder="Enter Username" name="email">
+            </div>
+            <div class="form-group">
+              <label for="inputPassword">Password</label>
+              <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <div class="btn-group" role="group" aria-label="Login Action">
+              <a href="register.html" class="btn btn-outline-theme" role="button">I want to Sign Up</a>
+              <button type="submit" class="btn btn-theme">SIGN IN</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container-fluid limited">
+        <div class="row">
+          <div class="col-6 col-lg-3">
+            <h6>Shop</h6>
+            <div class="list-group list-group-flush">
+              <a href="contact.html" class="list-group-item list-group-item-action">Help / Support</a>
+              <a href="about.html" class="list-group-item list-group-item-action">About Us</a>
+              <a href="faq.html" class="list-group-item list-group-item-action">FAQ</a>
+              <a href="#" class="list-group-item list-group-item-action">Coupons</a>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <h6>Our Policies</h6>
+            <div class="list-group list-group-flush">
+              <a href="#" class="list-group-item list-group-item-action">Terms &amp; Conditions</a>
+              <a href="#" class="list-group-item list-group-item-action">Privacy Policy</a>
+              <a href="#" class="list-group-item list-group-item-action">Payment Method</a>
+              <a href="#" class="list-group-item list-group-item-action">Shipping Method</a>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <h6>Download The App</h6>
+            <div>
+              <a href="#">
+                <div class="media">
+                  <img src="{% static 'img/apple.svg' %}" alt="Apple Logo" height="30">
+                  <div class="media-body">
+                    <small>Download on the</small>
+                    <div>App Store</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div>
+              <a href="#">
+                <div class="media">
+                  <img src="{% static 'img/google-play.svg' %}" alt="Google Play Logo" height="30">
+                  <div class="media-body">
+                    <small>Get it on</small>
+                    <div>Google Play</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div>
+              <a href="#">
+                <div class="media">
+                  <img src="{% static 'img/windows.svg' %}" alt="Windows Logo" height="30">
+                  <div class="media-body">
+                    <small>Get it from</small>
+                    <div>Microsoft Store</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <h6>Stay Connected</h6>
+            <p>Subscribe to our Newsletter to receive early discount offers, latest news, sales and promo information.</p>
+            <div class="input-group">
+              <input class="form-control" placeholder="Your Email Address" aria-label="Your Email Address" type="text">
+              <div class="input-group-append">
+                <button class="btn btn-theme" type="button">Subscribe</button>
+              </div>
+            </div>
+            <ul class="list-unstyled social-link">
+              <li><a href="#"><svg viewBox="0 0 24 24"><path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" /></svg></a></li>
+              <li><a href="#"><svg viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z" /></svg></a></li>
+              <li><a href="#"><svg viewBox="0 0 24 24"><path d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,11V13.4H12C11.8,14.4 10.8,16.4 8,16.4C5.6,16.4 3.7,14.4 3.7,12C3.7,9.6 5.6,7.6 8,7.6C9.4,7.6 10.3,8.2 10.8,8.7L12.7,6.9C11.5,5.7 9.9,5 8,5C4.1,5 1,8.1 1,12C1,15.9 4.1,19 8,19C12,19 14.7,16.2 14.7,12.2C14.7,11.7 14.7,11.4 14.6,11H8Z" /></svg></a></li>
+              <li><a href="#"><svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg></a></li>
+              <li><a href="#"><svg viewBox="0 0 24 24"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Footer -->
+
+    <!-- Copyright -->
+    <div class="copyright">
+      Copyright © 2018 Elva J. Pharmacy All right reserved
+    </div>
+    <!-- /Copyright -->
+
+    <a href="#top" class="back-top text-center" id="back-top">
+      <i class="material-icons">expand_less</i>
+    </a>
+    <!-- Required js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/typeahead.bundle.min.js' %}"></script>
+
+    <!-- Plugins js -->
+    <script src="{% static 'js/swiper.min.js' %}"></script>
+    <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+
+    <!-- Template JS -->
+    <script src="{% static 'js/script.min.js' %}"></script>
+
+  </body>
 </html>

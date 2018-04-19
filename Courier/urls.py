@@ -18,15 +18,16 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
-from django.contrib.auth.views import login #logout
 from DrugSystem.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^contanctUs$', contactUs),
     url(r'^cancelOrder$', cancelOrder),
     url(r'^confirmOrder$', confirmOrderDelivery),
+    url(r'^checkUserName$', checkUserName),
     url(r'^trackOrder', getOrderLocation),
-    url(r'^login$', login, {'template_name':'login.html'}, name='login'),
+    url(r'^login', logIn, name='login'),
     url(r'^logout$', logOut, name='logout'),
     url(r'^makeDrugs$', makeDrugs), 
     url(r'^makeOrder$', makeOrder),

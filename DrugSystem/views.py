@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User, Group, Permission
@@ -18,7 +18,35 @@ def logOut(request):
     print('You are logging out')
     logout(request)
     print('Logged out')
-    return redirect('/login')
+    return redirect('home')
+
+
+def logIn(request):
+    if request.POST:
+        print("In post")
+        userName = request.POST.get('email')
+        password = request.POST.get('password')
+        currentUser = authenticate(request, username=userName, password=password)
+        if currentUser is not None:
+            print("We are in")
+            login(request, currentUser)
+            return redirect('home')
+        #Try to login with the email
+        else:
+            email = request.POST.get('email')
+            currentUser = authenticate(request, email=email, password=password)
+            if currentUser is not None:
+                print("We are in")
+                login(request, currentUser)
+                return redirect('home')
+
+
+            #The user doesnt exist
+            else:
+                return redirect('home')
+
+
+    return render(request, 'login.html')
 
 @csrf_exempt
 def register(request):
@@ -39,10 +67,17 @@ def register(request):
     if(request.POST):
 
         userName = request.POST.get('username')
+        print(userName)
         password = request.POST.get('password')
+        print(password)
         firstN = request.POST.get('firstN')
+        print(firstN)
         lastN = request.POST.get('lastN')
+        print(lastN)
         companyN = request.POST.get('companyN')
+        print(companyN)
+        address = request.POST.get('address')
+        print(address)
 
        
 
@@ -52,7 +87,7 @@ def register(request):
             return render(request, 'index.html', context=context)        
         else:
             #If wer get everything from the request
-            if( all((userName, password, firstN, lastN, companyN))):
+            if( all((userName, password, firstN, lastN, companyN, address))):
                 #make the new user
                 newUser = User()
                 newUser.username = userName
@@ -65,6 +100,7 @@ def register(request):
                 newClient = Client()
                 newClient.user = newUser
                 newClient.companyName = companyN
+                newClient.address = address
                 newClient.save()
 
                 print('Made the user')
@@ -73,12 +109,12 @@ def register(request):
                 c0.user_set.add(newUser)
                 print('Added to Level C0')
 
-                #django.contrib.auth.login(user=newUser, request=request)
+                login(user=newUser, request=request)
                 return redirect("/home", request=request)
             else:
-                return HttpResponse(400, 'Please include all of the informaiton')
+                return redirect("home", request=request)
 
-    return render(request, 'index.html', context=context) #Note need to TODO: Chagne to the right template
+    return render(request, 'register.html', context=context) #Note need to TODO: Chagne to the right template
 
 
 @csrf_exempt
@@ -386,6 +422,7 @@ def home(request):
     # paidUser, created = Group.objects.get_or_create(name='Paid User')
     user = request.user
     context_dict = {}
+    print(user)
 
 
 
@@ -467,6 +504,11 @@ def makeDrugs(request):
 
 
     return  HttpResponse(status=200)
+    
 
+def contactUs(request):
+    print('contact')
+
+    return render(request, 'contact.html')
 
 

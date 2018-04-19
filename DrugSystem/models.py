@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Client(models.Model): #Note this is for a clients taht want to join the site
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     companyName = models.TextField()
+    address = models.TextField()
 
 
 #Letting Djnago build Admin and Agents
